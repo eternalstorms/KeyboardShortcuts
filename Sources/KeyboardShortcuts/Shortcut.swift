@@ -38,6 +38,10 @@ extension KeyboardShortcuts {
 		You most likely don't need this.
 		*/
 		public let carbonModifiers: Int
+		
+		public var isEnabled: Bool {
+			KeyboardShortcuts.shortcutIsEnabled(self)
+		}
 
 		/**
 		Initialize from a strongly-typed key and modifiers.
@@ -97,7 +101,7 @@ extension KeyboardShortcuts.Shortcut {
 	/**
 	Check whether the keyboard shortcut is already taken by the system.
 	*/
-	var isTakenBySystem: Bool {
+	public var isTakenBySystem: Bool {
 		guard self != Self(.f12, modifiers: []) else {
 			return false
 		}
@@ -292,7 +296,7 @@ extension KeyboardShortcuts.Shortcut {
 
 	- Note: Don't forget to also pass `.modifiers` to `NSMenuItem#keyEquivalentModifierMask`.
 	*/
-	var keyEquivalent: String {
+	public var keyEquivalent: String {
 		let keyString = keyToCharacter() ?? ""
 
 		guard keyString.count <= 1 else {

@@ -74,9 +74,9 @@ public enum KeyboardShortcuts {
 		}
 	}
 
-	private static func register(_ shortcut: Shortcut) {
+	@discardableResult private static func register(_ shortcut: Shortcut) -> Bool {
 		guard !registeredShortcuts.contains(shortcut) else {
-			return
+			return false
 		}
 
 		CarbonKeyboardShortcuts.register(
@@ -86,17 +86,23 @@ public enum KeyboardShortcuts {
 		)
 
 		registeredShortcuts.insert(shortcut)
+		
+		return true
 	}
 
 	/**
 	Register the shortcut for the given name if it has a shortcut.
 	*/
-	private static func registerShortcutIfNeeded(for name: Name) {
+	@discardableResult private static func registerShortcutIfNeeded(for name: Name) -> Bool {
 		guard let shortcut = getShortcut(for: name) else {
-			return
+			return false
 		}
 
-		register(shortcut)
+		return register(shortcut)
+	}
+	
+	public static func shortcutIsEnabled(_ shortcut: Shortcut) -> Bool {
+		return registeredShortcuts.contains(shortcut) || registeredShortcuts.first(where: {$0.key == shortcut.key && $0.modifiers == shortcut.modifiers}) != nil
 	}
 
 	private static func unregister(_ shortcut: Shortcut) {
@@ -192,21 +198,25 @@ public enum KeyboardShortcuts {
 	/**
 	Enable the keyboard shortcut for one or more names.
 	*/
-	public static func enable(_ names: [Name]) {
+	@discardableResult public static func enable(_ names: [Name]) -> Bool {
+		var gotAll = true
 		for name in names {
 			guard let shortcut = getShortcut(for: name) else {
+				gotAll = false
 				continue
 			}
 
 			register(shortcut)
 		}
+		
+		return gotAll
 	}
 
 	/**
 	Enable the keyboard shortcut for one or more names.
 	*/
-	public static func enable(_ names: Name...) {
-		enable(names)
+	@discardableResult public static func enable(_ names: Name...) -> Bool {
+		return enable(names)
 	}
 
 	/**
