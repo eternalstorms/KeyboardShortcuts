@@ -1,11 +1,12 @@
-import Cocoa
+#if os(macOS)
+import AppKit
 import Carbon.HIToolbox
 
 extension KeyboardShortcuts {
 	/**
 	A keyboard shortcut.
 	*/
-	public struct Shortcut: Hashable, Codable {
+	public struct Shortcut: Hashable, Codable, Sendable {
 		/**
 		Carbon modifiers are not always stored as the same number.
 
@@ -114,6 +115,7 @@ extension KeyboardShortcuts.Shortcut {
 	/**
 	Recursively finds a menu item in the given menu that has a matching key equivalent and modifier.
 	*/
+	@MainActor
 	func menuItemWithMatchingShortcut(in menu: NSMenu) -> NSMenuItem? {
 		for item in menu.items {
 			var keyEquivalent = item.keyEquivalent
@@ -145,6 +147,7 @@ extension KeyboardShortcuts.Shortcut {
 	/**
 	Returns a menu item in the app's main menu that has a matching key equivalent and modifier.
 	*/
+	@MainActor
 	var takenByMainMenu: NSMenuItem? {
 		guard let mainMenu = NSApp.mainMenu else {
 			return nil
@@ -162,7 +165,7 @@ private var keyToCharacterMapping: [KeyboardShortcuts.Key: String] = [
 	.escape: "⎋",
 	.help: "?⃝",
 	.home: "↖",
-	.space: "Space", // This matches what macOS uses.
+	.space: "space_key".localized, // This matches what macOS uses.
 	.tab: "⇥",
 	.pageUp: "⇞",
 	.pageDown: "⇟",
@@ -244,10 +247,8 @@ private var keyToKeyEquivalentString: [KeyboardShortcuts.Key: String] = [
 ]
 
 extension KeyboardShortcuts.Shortcut {
+	@MainActor
 	fileprivate func keyToCharacter() -> String? {
-		// `TISCopyCurrentASCIICapableKeyboardLayoutInputSource` works on a background thread, but crashes when used in a `NSBackgroundActivityScheduler` task, so we guard against that. It only crashes when running from Xcode, not in release builds, but it's probably safest to not call it from a `NSBackgroundActivityScheduler` no matter what.
-		assert(!DispatchQueue.isCurrentQueueNSBackgroundActivitySchedulerQueue, "This method cannot be used in a `NSBackgroundActivityScheduler` task")
-
 		// Some characters cannot be automatically translated.
 		if
 			let key,
@@ -296,6 +297,7 @@ extension KeyboardShortcuts.Shortcut {
 
 	- Note: Don't forget to also pass `.modifiers` to `NSMenuItem#keyEquivalentModifierMask`.
 	*/
+	@MainActor
 	public var keyEquivalent: String {
 		let keyString = keyToCharacter() ?? ""
 
@@ -323,8 +325,10 @@ extension KeyboardShortcuts.Shortcut: CustomStringConvertible {
 	//=> "⌘A"
 	```
 	*/
+	@MainActor
 	public var description: String {
 		// We use `.capitalized` so it correctly handles “⌘Space”.
-		modifiers.description + (keyToCharacter()?.capitalized ?? "�")
+		modifiers.presentableDescription + (keyToCharacter()?.capitalized ?? "�")
 	}
 }
+#endif

@@ -1,3 +1,4 @@
+#if os(macOS)
 import AppKit.NSMenu
 
 /**
@@ -76,7 +77,7 @@ public enum KeyboardShortcuts {
 
 	@discardableResult private static func register(_ shortcut: Shortcut) -> Bool {
 		guard !registeredShortcuts.contains(shortcut) else {
-			return false
+			return true
 		}
 
 		CarbonKeyboardShortcuts.register(
@@ -467,7 +468,7 @@ public enum KeyboardShortcuts {
 
 extension KeyboardShortcuts {
 	@available(macOS 10.15, *)
-	public enum EventType {
+	public enum EventType: Sendable {
 		case keyDown
 		case keyUp
 	}
@@ -599,3 +600,4 @@ extension KeyboardShortcuts {
 extension Notification.Name {
 	static let shortcutByNameDidChange = Self("KeyboardShortcuts_shortcutByNameDidChange")
 }
+#endif

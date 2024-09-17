@@ -1,3 +1,4 @@
+#if os(macOS)
 import Carbon.HIToolbox
 import SwiftUI
 
@@ -201,27 +202,34 @@ extension NSAlert {
 		title: String,
 		message: String? = nil,
 		style: Style = .warning,
-		icon: NSImage? = nil
+		icon: NSImage? = nil,
+		buttonTitles: [String] = []
 	) -> NSApplication.ModalResponse {
 		NSAlert(
 			title: title,
 			message: message,
 			style: style,
-			icon: icon
+			icon: icon,
+			buttonTitles: buttonTitles
 		).runModal(for: window)
 	}
-
+	
 	convenience init(
 		title: String,
 		message: String? = nil,
 		style: Style = .warning,
-		icon: NSImage? = nil
+		icon: NSImage? = nil,
+		buttonTitles: [String] = []
 	) {
 		self.init()
 		self.messageText = title
 		self.alertStyle = style
 		self.icon = icon
-
+		
+		for buttonTitle in buttonTitles {
+			addButton(withTitle: buttonTitle)
+		}
+		
 		if let message {
 			self.informativeText = message
 		}
@@ -297,39 +305,38 @@ extension NSEvent.ModifierFlags {
 	}
 }
 
-/// :nodoc:
-extension NSEvent.ModifierFlags: CustomStringConvertible {
+extension NSEvent.ModifierFlags {
 	/**
-	The string representation of the modifier flags.
-
-	```
-	print(NSEvent.ModifierFlags([.command, .shift]))
-	//=> "⇧⌘"
-	```
-	*/
-	public var description: String {
+	 The string representation of the modifier flags.
+	 
+	 ```
+	 print(NSEvent.ModifierFlags([.command, .shift]))
+	 //=> "⇧⌘"
+	 ```
+	 */
+	var presentableDescription: String {
 		var description = ""
-
+		
 		if contains(.control) {
 			description += "⌃"
 		}
-
+		
 		if contains(.option) {
 			description += "⌥"
 		}
-
+		
 		if contains(.shift) {
 			description += "⇧"
 		}
-
+		
 		if contains(.command) {
 			description += "⌘"
 		}
-
+		
 		if contains(.function) {
 			description += UnicodeSymbols.functionKey
 		}
-
+		
 		return description
 	}
 }
@@ -388,15 +395,15 @@ enum AssociationPolicy {
 	var rawValue: objc_AssociationPolicy {
 		switch self {
 		case .assign:
-			return .OBJC_ASSOCIATION_ASSIGN
+			.OBJC_ASSOCIATION_ASSIGN
 		case .retainNonatomic:
-			return .OBJC_ASSOCIATION_RETAIN_NONATOMIC
+			.OBJC_ASSOCIATION_RETAIN_NONATOMIC
 		case .copyNonatomic:
-			return .OBJC_ASSOCIATION_COPY_NONATOMIC
+			.OBJC_ASSOCIATION_COPY_NONATOMIC
 		case .retain:
-			return .OBJC_ASSOCIATION_RETAIN
+			.OBJC_ASSOCIATION_RETAIN
 		case .copy:
-			return .OBJC_ASSOCIATION_COPY
+			.OBJC_ASSOCIATION_COPY
 		}
 	}
 }
@@ -418,26 +425,6 @@ final class ObjectAssociation<T> {
 			objc_setAssociatedObject(index, Unmanaged.passUnretained(self).toOpaque(), newValue, policy.rawValue)
 		}
 	}
-}
-
-
-extension DispatchQueue {
-	/**
-	Label of the current dispatch queue.
-
-	- Important: Only meant for debugging purposes.
-
-	```
-	DispatchQueue.currentQueueLabel
-	//=> "com.apple.main-thread"
-	```
-	*/
-	static var currentQueueLabel: String { String(cString: __dispatch_queue_get_label(nil)) }
-
-	/**
-	Whether the current queue is a `NSBackgroundActivityScheduler` task.
-	*/
-	static var isCurrentQueueNSBackgroundActivitySchedulerQueue: Bool { currentQueueLabel.hasPrefix("com.apple.xpc.activity.") }
 }
 
 
@@ -463,3 +450,4 @@ extension View {
 			.alignmentGuide(.leading) { $0[.controlAlignment] }
 	}
 }
+#endif

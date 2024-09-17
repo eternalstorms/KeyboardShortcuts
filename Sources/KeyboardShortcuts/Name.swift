@@ -1,3 +1,4 @@
+#if os(macOS)
 extension KeyboardShortcuts {
 	/**
 	The strongly-typed name of the keyboard shortcut.
@@ -12,7 +13,7 @@ extension KeyboardShortcuts {
 	}
 	```
 	*/
-	public struct Name: Hashable {
+	public struct Name: Hashable, Sendable {
 		// This makes it possible to use `Shortcut` without the namespace.
 		/// :nodoc:
 		public typealias Shortcut = KeyboardShortcuts.Shortcut
@@ -56,3 +57,4 @@ extension KeyboardShortcuts.Name: RawRepresentable {
 		self.init(rawValue)
 	}
 }
+#endif
