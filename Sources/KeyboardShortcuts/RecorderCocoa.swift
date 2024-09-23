@@ -281,7 +281,7 @@ extension KeyboardShortcuts {
 					NSAlert.showModal(
 						for: window,
 						title: "optionshift_sequoia_unavailable_title".localized,
-						message: "optionshift_sequoia_unavailable_msg".localized,
+						message: "optionshift_sequoia_unavailable_msg".localized
 					)
 
 					focus()
