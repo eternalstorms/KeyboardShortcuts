@@ -5,3 +5,5 @@
 "keyboard_shortcuts_can_be_changed" = "Die meisten systemweiten Tastaturkürzel können unter „Systemeinstellungen › Tastatur › Tastaturkurzbefehle“ geändert werden.";
 "ok" = "OK";
 "space_key" = "Leer";
+"optionshift_sequoia_unavailable_title" = "Kombination unter macOS Sequoia nicht erlaubt";
+"optionshift_sequoia_unavailable_msg" = "Unter macOS Sequoia wird zu der Options- und/oder Shift-Taste eine weitere Taste benötigt.\nVielleicht hilft es, Apple Feedback zu senden, um sie dazu zu bringen, diese Änderung zu verwerfen.";

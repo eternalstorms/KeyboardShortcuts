@@ -5,3 +5,5 @@
 "keyboard_shortcuts_can_be_changed" = "يمكن تغيير معظم اختصارات لوحة المفاتيح على مستوى النظام في “تفضيلات النظام > لوحة المفاتيح > الاختصارات ”.";
 "ok" = "موافق";
 "space_key" = "مسافة";
+"optionshift_sequoia_unavailable_title" = "Combination disallowed on macOS Sequoia";
+"optionshift_sequoia_unavailable_msg" = "macOS Sequoia requires an additional modifier alongside the shift and/or option modifiers.\nPlease consider sending feedback to Apple to make them change their minds about this.";

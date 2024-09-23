@@ -6,3 +6,5 @@
 "force_use_shortcut" = "Použiť napriek tomu";
 "ok" = "OK";
 "space_key" = "Medzerník";
+"optionshift_sequoia_unavailable_title" = "Combination disallowed on macOS Sequoia";
+"optionshift_sequoia_unavailable_msg" = "macOS Sequoia requires an additional modifier alongside the shift and/or option modifiers.\nPlease consider sending feedback to Apple to make them change their minds about this.";

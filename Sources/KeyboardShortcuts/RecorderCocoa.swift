@@ -269,6 +269,23 @@ extension KeyboardShortcuts {
 					NSSound.beep()
 					return nil
 				}
+				
+				guard #unavailable(macOS 15.0, *) || (event.modifiers != .option && event.modifiers != [.option, .shift] && event.modifiers != [.function, .option, .shift]) else {
+					NSSound.beep()
+					clear()
+					
+					blur()
+
+					NSAlert.showModal(
+						for: window,
+						title: "optionshift_sequoia_unavailable_title".localized,
+						message: "optionshift_sequoia_unavailable_msg".localized,
+					)
+
+					focus()
+					
+					return nil
+				}
 
 				if let menuItem = shortcut.takenByMainMenu {
 					// TODO: Find a better way to make it possible to dismiss the alert by pressing "Enter". How can we make the input automatically temporarily lose focus while the alert is open?
