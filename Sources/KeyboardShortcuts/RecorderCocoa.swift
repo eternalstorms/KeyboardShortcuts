@@ -270,7 +270,9 @@ extension KeyboardShortcuts {
 					return nil
 				}
 				
-				guard #unavailable(macOS 15.0) || (event.modifiers != .option && event.modifiers != [.option, .shift] && event.modifiers != [.function, .option, .shift]) else {
+				var macOS15Available = false
+				if #available(macOS 15.0, *) { macOS15Available = true }
+				guard !macOS15Available || (event.modifiers != .option && event.modifiers != [.option, .shift] && event.modifiers != [.function, .option, .shift]) else {
 					NSSound.beep()
 					clear()
 					
