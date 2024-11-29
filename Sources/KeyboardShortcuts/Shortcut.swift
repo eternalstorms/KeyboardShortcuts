@@ -64,7 +64,8 @@ extension KeyboardShortcuts {
 
 			self.init(
 				carbonKeyCode: Int(event.keyCode),
-				carbonModifiers: event.modifierFlags.carbon
+				//carbonModifiers: event.modifierFlags.carbon
+				carbonModifiers: event.modifierFlags.subtracting(.function).carbon
 			)
 		}
 
