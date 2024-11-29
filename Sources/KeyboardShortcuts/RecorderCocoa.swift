@@ -270,9 +270,13 @@ extension KeyboardShortcuts {
 					return nil
 				}
 				
-				var macOS15Available = false
-				if #available(macOS 15.0, *) { macOS15Available = true }
-				guard !macOS15Available || (event.modifiers != .option && event.modifiers != [.option, .shift] && event.modifiers != [.function, .option, .shift]) else {
+				var canUseOptionForKBShortcuts = true
+				if #available(macOS 15.0, *) {
+					if #unavailable(macOS 15.2) {
+						canUseOptionForKBShortcuts = false
+					}
+				}
+				guard canUseOptionForKBShortcuts || (event.modifiers != .option && event.modifiers != [.option, .shift] && event.modifiers != [.function, .option, .shift]) else {
 					NSSound.beep()
 					clear()
 					
